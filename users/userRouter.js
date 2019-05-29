@@ -3,9 +3,36 @@ const express = require("express");
 const User = require("./userDb.js");
 const router = express.Router();
 
-router.post("/", (req, res) => {});
+router.post("/", (req, res) => {
+  const { name } = req.body;
+  User.insert({
+    name
+  })
+    .then(response => {
+      res.status(201).json({ name });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while adding the user to the database"
+      });
+    });
+});
 
-router.post("/:id/posts", (req, res) => {});
+/* router.post("/:id/posts", (req, res) => {
+  const { id } = req.params;
+  const { text, user_id } = req.body;
+  User.insert({
+    name
+  })
+    .then(response => {
+      res.status(201).json({ name });
+    })
+    .catch(error => {
+      res.status(500).json({
+        error: "There was an error while adding the user to the database"
+      });
+    });
+}); */
 
 router.get("/", (req, res) => {
   User.get()
@@ -28,13 +55,39 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {});
+router.get("/:id/posts", (req, res) => {
+  const { id } = req.params;
+  User.getUserPosts(id)
+    .then(posts => {
+      res.status(200).json({ posts });
+    })
+    .catch(error => {
+      res.status(500).json({ error: "User comments could not be retrieved." });
+    });
+});
 
-router.get("/:id/posts", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  User.remove(id)
+    .then(response => {
+      res.json({ message: "User successfully removed" });
+    })
+    .catch(error => {
+      res.status(500).json({ message: "Error removing user" });
+    });
+});
 
-router.delete("/:id", (req, res) => {});
-
-router.put("/:id", (req, res) => {});
+router.put("/:id", (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  User.update(id, { name })
+    .then(response => {
+      res.status(200).json({ name });
+    })
+    .catch(error => {
+      res.status(500).json({ error: "The user could not be updated" });
+    });
+});
 
 //custom middleware
 
