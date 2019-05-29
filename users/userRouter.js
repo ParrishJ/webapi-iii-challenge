@@ -17,6 +17,17 @@ router.get("/", (req, res) => {
     });
 });
 
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  User.getById(id)
+    .then(user => {
+      res.status(200).json({ user });
+    })
+    .catch(error => {
+      res.status(500).json({ error: "User could not be retrieved." });
+    });
+});
+
 router.get("/:id", (req, res) => {});
 
 router.get("/:id/posts", (req, res) => {});

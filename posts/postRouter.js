@@ -13,7 +13,16 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {});
+router.get("/:id", (req, res) => {
+  const { id } = req.params;
+  Post.getById(id)
+    .then(post => {
+      res.status(200).json({ post });
+    })
+    .catch(error => {
+      res.status(500).json({ error: "Post could not be retrieved." });
+    });
+});
 
 router.delete("/:id", (req, res) => {});
 
