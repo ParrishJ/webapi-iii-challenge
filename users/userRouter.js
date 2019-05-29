@@ -1,6 +1,7 @@
 const express = require("express");
 
 const User = require("./userDb.js");
+const Post = require("../posts/postDb.js");
 const router = express.Router();
 
 router.post("/", (req, res) => {
@@ -18,21 +19,21 @@ router.post("/", (req, res) => {
     });
 });
 
-/* router.post("/:id/posts", (req, res) => {
+router.post("/:id/posts", (req, res) => {
   const { id } = req.params;
   const { text, user_id } = req.body;
-  User.insert({
-    name
-  })
+  const postData = { ...req.body, user_id: req.params.id };
+  console.log("user id ----->", user_id);
+  Post.insert(postData)
     .then(response => {
-      res.status(201).json({ name });
+      res.status(201).json({ text, user_id });
     })
     .catch(error => {
       res.status(500).json({
-        error: "There was an error while adding the user to the database"
+        error: "There was an error while saving the comment to the database"
       });
     });
-}); */
+});
 
 router.get("/", (req, res) => {
   User.get()
